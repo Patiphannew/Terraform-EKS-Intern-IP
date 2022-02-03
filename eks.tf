@@ -1,7 +1,7 @@
 module "eks" {
   source = "terraform-aws-modules/eks/aws"
 
-  cluster_name                    = "my-cluster"
+  cluster_name                    = "test-cluster"
   cluster_version                 = "1.21"
   cluster_endpoint_private_access = true
   cluster_endpoint_public_access  = true
@@ -97,7 +97,7 @@ module "eks" {
   eks_managed_node_groups = {
     # name = "new-NG"
     # blue = {}
-    new-NG = {
+    test-NG = {
       min_size     = 1
       max_size     = 1
       desired_size = 1

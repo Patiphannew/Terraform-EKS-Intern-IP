@@ -3,7 +3,7 @@ module "nlb" {
   # source  = "./.terraform/modules/nlb"
   version = "~> 6.0"
 
-  name = "new-nlb"             # Create load balancer name
+  name = "test-nlb"             # Create load balancer name
 
   load_balancer_type = "network"    # Create load balancer type
 
@@ -13,7 +13,7 @@ module "nlb" {
 
   target_groups = [                 # Create target groups
     {
-      name_prefix      = "new-TG"
+      name_prefix      = "test-TG"
       backend_protocol = "TCP"
       backend_port     = 32593
       # target_type      = "ip"
