@@ -99,7 +99,7 @@ module "eks" {
     # blue = {}
     test-NG = {
       min_size     = 1
-      max_size     = 1
+      max_size     = 2
       desired_size = 1
 
       instance_types = ["t3.medium"]
@@ -168,4 +168,15 @@ module "eks" {
   #     Environment = "dev"
   #     Terraform   = "true"
   #   }
+  node_security_group_additional_rules = {
+    ingress_self_all = {
+      description = "Node to node all ports/protocols"
+      protocol    = "all"
+      from_port   = 0
+      to_port     = 65535
+      type        = "ingress"
+      self        = true
+    }
+  }
+
 }

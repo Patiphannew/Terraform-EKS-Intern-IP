@@ -13,7 +13,7 @@ module "nlb" {
 
   target_groups = [                 # Create target groups
     {
-      name_prefix      = "test-TG"
+      name_prefix      = "testTG"
       backend_protocol = "TCP"
       backend_port     = 32593
       # target_type      = "ip"

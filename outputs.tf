@@ -2,7 +2,6 @@ output "eks_managed_node_groups" {
     value =module.eks.eks_managed_node_groups
 }
 
-
 output "http_tcp_listener_arns" {
     value =module.nlb.http_tcp_listener_arns
 }
@@ -43,7 +42,6 @@ output "target_group_attachments" {
 output "target_group_names" {
     value =module.nlb.target_group_names
 }
-
 
 output "aws_autoscaling_attachment" {
     value = aws_autoscaling_attachment.asg_attachment_bar.autoscaling_group_name
