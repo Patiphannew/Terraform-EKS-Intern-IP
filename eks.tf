@@ -168,15 +168,25 @@ module "eks" {
   #     Environment = "dev"
   #     Terraform   = "true"
   #   }
-  node_security_group_additional_rules = {
-    ingress_self_all = {
-      description = "Node to node all ports/protocols"
-      protocol    = "all"
-      from_port   = 0
-      to_port     = 65535
-      type        = "ingress"
-      self        = true
-    }
-  }
+  # node_security_group_additional_rules = {
+  #   ingress_self_all = {
+  #     description = "Node to node all ports/protocols"
+  #     protocol    = "all"
+  #     from_port   = 0
+  #     to_port     = 65535
+  #     type        = "ingress"
+  #     self        = true
+  #   }
+  # }
 
 }
+
+resource "aws_security_group_rule" "all_traffice" {
+    type             = "ingress"
+    description      = "all port"
+    from_port        = 0
+    to_port          = 65535
+    protocol         = "all"
+    cidr_blocks = ["0.0.0.0/0"]
+    security_group_id = module.eks.eks_managed_node_groups.test-NG.security_group_id
+  }
