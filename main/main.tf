@@ -1,23 +1,23 @@
-variable "eks2" {
-  type = map(any)
+variable "eks" {
+  type = map
 }
-variable "eks2Subnet" {
-  type = list(any)
+variable "eksSubnet" {
+  type = list
 }
 variable "eksManagedNodeGroupDefaults" {
-  type = map(any)
+  type = map
 }
 variable "eksManagedNodeGroup" {
-  type = map(any)
+  type = map
 }
 
 module "eks" {
   source = "terraform-aws-modules/eks/aws"
 
-  cluster_name                    = var.eks2.cluster_name
-  cluster_version                 = var.eks2.cluster_version
-  cluster_endpoint_private_access = var.eks2.cluster_endpoint_private_access
-  cluster_endpoint_public_access  = var.eks2.cluster_endpoint_public_access
+  cluster_name                    = var.eks.cluster_name
+  cluster_version                 = var.eks.cluster_version
+  cluster_endpoint_private_access = var.eks.cluster_endpoint_private_access
+  cluster_endpoint_public_access  = var.eks.cluster_endpoint_public_access
 
   #   cluster_addons = {
   #     coredns = {
@@ -34,8 +34,8 @@ module "eks" {
   #     resources        = ["secrets"]
   #   }]
 
-  vpc_id     = var.eks2.vpc_id
-  subnet_ids = [var.eks2Subnet[0], var.eks2Subnet[1], var.eks2Subnet[2]]
+  vpc_id     = var.eks.vpc_id
+  subnet_ids = [var.eksSubnet[0], var.eksSubnet[1], var.eksSubnet[2]]
 
   ##################################################################################################################
 
@@ -194,32 +194,12 @@ resource "aws_security_group_rule" "all_traffice" {
   to_port           = 65535
   protocol          = "all"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = module.eks.eks_managed_node_groups.test-NG.security_group_id
+  security_group_id = module.eks.eks_managed_node_groups.newMNG.security_group_id
 }
 
 ###################################autoscaling#########################################
 
 resource "aws_autoscaling_attachment" "asg_attachment_bar" {
-  autoscaling_group_name = module.eks.eks_managed_node_groups.test-NG.node_group_resources[0].autoscaling_groups[0].name
+  autoscaling_group_name = module.eks.eks_managed_node_groups.newMNG.node_group_resources[0].autoscaling_groups[0].name
   alb_target_group_arn   = module.nlb.target_group_arns[0]
-}
-
-###################################ArgoCD##############################################
-
-
-
-###################################nginx-ingress######################################
-
-resource "helm_release" "ingress-con-helm" {
-  name = "ingress-con-helm"
-
-  repository       = "https://helm.nginx.com/stable"
-  chart            = "nginx-ingress"
-  create_namespace = true
-  namespace        = "nginx-ingress"
-
-  set {
-    name  = "controller.service.create"
-    value = "false"
-  }
 }
