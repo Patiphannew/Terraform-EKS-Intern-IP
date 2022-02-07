@@ -1,10 +1,23 @@
+variable "eks2" {
+  type = map(any)
+}
+variable "eks2Subnet" {
+  type = list(any)
+}
+variable "eksManagedNodeGroupDefaults" {
+  type = map(any)
+}
+variable "eksManagedNodeGroup" {
+  type = map(any)
+}
+
 module "eks" {
   source = "terraform-aws-modules/eks/aws"
 
-  cluster_name                    = "test-cluster"
-  cluster_version                 = "1.21"
-  cluster_endpoint_private_access = true
-  cluster_endpoint_public_access  = true
+  cluster_name                    = var.eks2.cluster_name
+  cluster_version                 = var.eks2.cluster_version
+  cluster_endpoint_private_access = var.eks2.cluster_endpoint_private_access
+  cluster_endpoint_public_access  = var.eks2.cluster_endpoint_public_access
 
   #   cluster_addons = {
   #     coredns = {
@@ -21,15 +34,15 @@ module "eks" {
   #     resources        = ["secrets"]
   #   }]
 
-  vpc_id     = "vpc-b8d13ade"
-  subnet_ids = ["subnet-6221ed2a", "subnet-7e65ee27", "subnet-977ea2f1"]
+  vpc_id     = var.eks2.vpc_id
+  subnet_ids = [var.eks2Subnet[0], var.eks2Subnet[1], var.eks2Subnet[2]]
 
   ##################################################################################################################
 
 
 
 
-  # Self Managed Node Group(s)
+  # # Self Managed Node Group(s)
   # self_managed_node_group_defaults = {
   #   instance_type                          = "t3.medium"
   #   update_launch_template_default_version = true
@@ -38,10 +51,10 @@ module "eks" {
 
   # self_managed_node_groups = {
   #   one = {
-  #     name = "my-smng"
+  #     name = "banjo_selfmanagednode3"
 
   #     public_ip    = true
-  #     max_size     = 1
+  #     max_size     = 3
   #     desired_size = 1
 
   #     use_mixed_instances_policy = true
@@ -52,32 +65,32 @@ module "eks" {
   #         spot_allocation_strategy                 = "capacity-optimized"
   #       }
 
-  # override = [
-  #   {
-  #     instance_type     = "t3.medium"
-  #     weighted_capacity = "1"
-  #   },
-  #   {
-  #     instance_type     = "t3.medium"
-  #     weighted_capacity = "2"
-  #   },
-  # ]
-  # }
-
-  #       pre_bootstrap_user_data = <<-EOT
-  #       echo "foo"
-  #       export FOO=bar
-  #       EOT
-
-  #       bootstrap_extra_args = "--kubelet-extra-args '--node-labels=node.kubernetes.io/lifecycle=spot'"
-
-  #       post_bootstrap_user_data = <<-EOT
-  #       cd /tmp
-  #       sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
-  #       sudo systemctl enable amazon-ssm-agent
-  #       sudo systemctl start amazon-ssm-agent
-  #       EOT
+  #       # override = [
+  #       #   {
+  #       #     instance_type     = "t3.medium"
+  #       #     weighted_capacity = "1"
+  #       #   },
+  #       #   {
+  #       #     instance_type     = "t3.medium"
+  #       #     weighted_capacity = "2"
+  #       #   },
+  #       # ]
   #     }
+
+  #     pre_bootstrap_user_data = <<-EOT
+  #     echo "foo"
+  #     export FOO=bar
+  #     EOT
+
+  #     bootstrap_extra_args = "--kubelet-extra-args '--node-labels=node.kubernetes.io/lifecycle=spot'"
+
+  #     post_bootstrap_user_data = <<-EOT
+  #     cd /tmp
+  #     sudo yum install -y https://s3.amazonaws.com/ec2-downloads-windows/SSMAgent/latest/linux_amd64/amazon-ssm-agent.rpm
+  #     sudo systemctl enable amazon-ssm-agent
+  #     sudo systemctl start amazon-ssm-agent
+  #     EOT
+  #   }
   # }
 
 
@@ -87,30 +100,32 @@ module "eks" {
 
   # EKS Managed Node Group(s)
   eks_managed_node_group_defaults = {
-    ami_type       = "AL2_x86_64"
-    disk_size      = 20
-    instance_types = ["t3.medium"]
+    ami_type       = var.eksManagedNodeGroupDefaults.ami_type
+    disk_size      = var.eksManagedNodeGroupDefaults.disk_size
+    instance_types = [var.eksManagedNodeGroupDefaults.instance_types]
     # vpc_security_group_ids = [aws_security_group.additional.id]
-    vpc_security_group_ids = ["sg-030afe75"]
+    vpc_security_group_ids = [var.eksManagedNodeGroupDefaults.vpc_security_group_ids]
   }
 
   eks_managed_node_groups = {
-    # name = "new-NG"
+    # name = "banjo_managednode3"
     # blue = {}
-    test-NG = {
-      min_size     = 1
-      max_size     = 2
-      desired_size = 1
+    (var.eksManagedNodeGroup.name) = {
+      # create_launch_template = false
+      # launch_template_name   = ""
+      min_size     = var.eksManagedNodeGroup.min_size
+      max_size     = var.eksManagedNodeGroup.max_size
+      desired_size = var.eksManagedNodeGroup.desired_size
 
-      instance_types = ["t3.medium"]
+      instance_types = [var.eksManagedNodeGroup.instance_types]
       # capacity_type  = "SPOT"
-      capacity_type = "ON_DEMAND"
+      capacity_type = var.eksManagedNodeGroup.capacity_type
     }
 
     # green = {
-    #   name = "new-NG"
+    #   name = "banjo_managednode3"
     #   min_size     = 1
-    #   max_size     = 1
+    #   max_size     = 2
     #   desired_size = 1
 
     #   instance_types = ["t3.medium"]
@@ -168,25 +183,43 @@ module "eks" {
   #     Environment = "dev"
   #     Terraform   = "true"
   #   }
-  # node_security_group_additional_rules = {
-  #   ingress_self_all = {
-  #     description = "Node to node all ports/protocols"
-  #     protocol    = "all"
-  #     from_port   = 0
-  #     to_port     = 65535
-  #     type        = "ingress"
-  #     self        = true
-  #   }
-  # }
-
 }
 
+###################################securitygroup######################################
+
 resource "aws_security_group_rule" "all_traffice" {
-    type             = "ingress"
-    description      = "all port"
-    from_port        = 0
-    to_port          = 65535
-    protocol         = "all"
-    cidr_blocks = ["0.0.0.0/0"]
-    security_group_id = module.eks.eks_managed_node_groups.test-NG.security_group_id
+  type              = "ingress"
+  description       = "all port"
+  from_port         = 0
+  to_port           = 65535
+  protocol          = "all"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = module.eks.eks_managed_node_groups.test-NG.security_group_id
+}
+
+###################################autoscaling#########################################
+
+resource "aws_autoscaling_attachment" "asg_attachment_bar" {
+  autoscaling_group_name = module.eks.eks_managed_node_groups.test-NG.node_group_resources[0].autoscaling_groups[0].name
+  alb_target_group_arn   = module.nlb.target_group_arns[0]
+}
+
+###################################ArgoCD##############################################
+
+
+
+###################################nginx-ingress######################################
+
+resource "helm_release" "ingress-con-helm" {
+  name = "ingress-con-helm"
+
+  repository       = "https://helm.nginx.com/stable"
+  chart            = "nginx-ingress"
+  create_namespace = true
+  namespace        = "nginx-ingress"
+
+  set {
+    name  = "controller.service.create"
+    value = "false"
   }
+}

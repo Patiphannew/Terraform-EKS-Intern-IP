@@ -1,23 +1,42 @@
+variable "myNlb" {
+  type = map
+}
+
+variable "nlbSubnet" {
+  type = list
+}
+
+variable "targetGroups" {
+  type = map
+}
+
+variable "httpTcpListeners" {
+  type = map
+}
+
 module "nlb" {
   source  = "terraform-aws-modules/alb/aws"
   # source  = "./.terraform/modules/nlb"
   version = "~> 6.0"
 
-  name = "test-nlb"             # Create load balancer name
+  name = var.myNlb["nlbName"]                   # Create load balancer name
 
-  load_balancer_type = "network"    # Create load balancer type
+  load_balancer_type = var.myNlb["lbType"]      # Create load balancer type
 
-  vpc_id  = "vpc-b8d13ade"
-  subnets = ["subnet-6221ed2a", "subnet-7e65ee27", "subnet-977ea2f1"]
+  vpc_id  = var.myNlb["vpc_id"] 
+  subnets = [var.nlbSubnet[0], var.nlbSubnet[1], var.nlbSubnet[2]]
 
+  # access_logs = {
+  #   bucket = "buckettestbanjo"
+  # }
 
   target_groups = [                 # Create target groups
     {
-      name_prefix      = "testTG"
-      backend_protocol = "TCP"
-      backend_port     = 32593
+      name_prefix      = var.targetGroups["namePrefix"]
+      backend_protocol = var.targetGroups["backendProtocol"]
+      backend_port     = var.targetGroups["backendPort"]
       # target_type      = "ip"
-      target_type      = "instance"
+      target_type      = var.targetGroups["targetType"]
     }
   ]
 
@@ -32,9 +51,9 @@ module "nlb" {
 
   http_tcp_listeners = [           # Create listeners
     {
-      port               = 80
-      protocol           = "TCP"
-      target_group_index = 0
+      port               = var.httpTcpListeners["port"]
+      protocol           = var.httpTcpListeners["protocol"]
+      target_group_index = var.httpTcpListeners["targetGroupIndex"]
     }
   ]
 
