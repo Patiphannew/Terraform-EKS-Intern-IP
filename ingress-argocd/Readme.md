@@ -2,7 +2,7 @@
 ## config & deployment of ArgoCD
 **1.ต้องใส่** `aws eks update-kubeconfig --region ap-southeast-1 --name ${clustername} --profile ${profilename}` **เพื่อ update kubeconfig ก่อน** <br>
 
-**2.terraform apply ได้เลย** `terraform apply -var-file="var.tfvars` <br>
+**2.terraform apply ได้เลย** `terraform apply -var-file="var.tfvars"` <br>
 
 **3.ใช้คำสั่ง**
 `kubectl port-forward svc/argocd-helm-server -n argocd 8080:443` 
