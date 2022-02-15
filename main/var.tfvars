@@ -50,3 +50,49 @@ httpTcpListeners = {
   protocol         = "TCP"
   targetGroupIndex = 0
 }
+
+#######################  RDS  ######################################################################
+
+rds = {
+  identifier        = "newpgdb"
+  engine            = "postgres"
+  engine_version    = "14.1"
+  instance_class    = "db.t4g.small"
+  allocated_storage = 20
+  max_allocated_storage = 1000
+  storage_encrypted     = true
+
+  name     = "newpgdb"
+  username = "postgres"
+  password = "postgres"
+  port     = "5432"
+ 
+  iam_database_authentication_enabled = false
+
+  vpc_security_group_ids = "sg-030afe75"
+
+  monitoring_interval = "60"
+  monitoring_role_name = "NewRDSMonitoringRole"
+  create_monitoring_role = true
+
+  publicly_accessible = false
+  multi_az = false
+
+  create_db_subnet_group = true
+  db_subnet_group_name = "new-subgroup"
+  db_subnet_group_use_name_prefix = false
+  db_subnet_group_description = "helloworld"
+  # subnet_ids = [aws_subnet.one.id, aws_subnet.second.id]
+
+  family = "postgres14"
+
+  deletion_protection = false
+
+  backup_retention_period = 7
+  delete_automated_backups = true
+
+  performance_insights_enabled = true
+  performance_insights_kms_key_id = "arn:aws:kms:ap-southeast-1:115595541515:key/44cffea8-6f93-403c-9d53-bce9d9616f1c"
+  performance_insights_retention_period = 7 
+  
+}

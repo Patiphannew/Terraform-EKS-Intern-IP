@@ -1,67 +1,73 @@
+variable "rds" {
+  type = map(any)
+}
+
+
+
 module "db" {
   source  = "terraform-aws-modules/rds/aws"
   version = "~> 3.0"
 
-  identifier = "newpgdb"
+  identifier = var.rds.identifier
 
-  engine         = "postgres"
-  engine_version = "14.1"
-  instance_class = "db.t4g.small"
+  engine         = var.rds.engine
+  engine_version = var.rds.engine_version
+  instance_class = var.rds.instance_class
 
-  allocated_storage     = 20
-  max_allocated_storage = 1000
-  storage_encrypted     = true
+  allocated_storage     = var.rds.allocated_storage
+  max_allocated_storage = var.rds.max_allocated_storage
+  storage_encrypted     = var.rds.storage_encrypted
 
-  name     = "newpgdb"
-  username = "postgres"
-  password = "postgres"
-  port     = "5432"
+  name     = var.rds.name
+  username = var.rds.username
+  password = var.rds.password
+  port     = var.rds.port
 
-  iam_database_authentication_enabled = false
+  iam_database_authentication_enabled = var.rds.iam_database_authentication_enabled
 
-  vpc_security_group_ids = ["sg-030afe75"]
+  vpc_security_group_ids = [var.rds.vpc_security_group_ids]
 
   #   maintenance_window = "Mon:00:00-Mon:03:00"
   #   backup_window      = "03:00-06:00"
 
   # Enhanced Monitoring - see example for details on how to create the role
   # by yourself, in case you don't want to create it automatically
-  monitoring_interval    = "60"
-  monitoring_role_name   = "NewRDSMonitoringRole"
-  create_monitoring_role = true
+  monitoring_interval    = var.rds.monitoring_interval
+  monitoring_role_name   = var.rds.monitoring_role_name
+  create_monitoring_role = var.rds.create_monitoring_role
 
   #   tags = {
   #     Owner       = "user"
   #     Environment = "dev"
   #   }
 
-  publicly_accessible = false
-  multi_az            = false
+  publicly_accessible = var.rds.publicly_accessible
+  multi_az            = var.rds.multi_az
 
   # DB subnet group from resource "aws_subnet"
-  create_db_subnet_group          = true
-  db_subnet_group_name            = "new-subgroup"
-  db_subnet_group_use_name_prefix = false
-  db_subnet_group_description     = "helloworld"
+  create_db_subnet_group          = var.rds.create_db_subnet_group
+  db_subnet_group_name            = var.rds.db_subnet_group_name
+  db_subnet_group_use_name_prefix = var.rds.db_subnet_group_use_name_prefix
+  db_subnet_group_description     = var.rds.db_subnet_group_description
   subnet_ids                      = [aws_subnet.one.id, aws_subnet.second.id]
 
   # DB parameter group
   #   family = "mysql5.7"
   #   family = "default.postgres14"
-  family = "postgres14"
+  family = var.rds.family
 
   # DB option group
   #   major_engine_version = "5.7"
 
   # Database Deletion Protection
-  deletion_protection = false
+  deletion_protection = var.rds.deletion_protection
 
-  backup_retention_period  = 7
-  delete_automated_backups = true
+  backup_retention_period  = var.rds.backup_retention_period
+  delete_automated_backups = var.rds.delete_automated_backups
 
-  performance_insights_enabled          = true
-  performance_insights_kms_key_id       = "arn:aws:kms:ap-southeast-1:115595541515:key/44cffea8-6f93-403c-9d53-bce9d9616f1c"
-  performance_insights_retention_period = 7
+  performance_insights_enabled          = var.rds.performance_insights_enabled
+  performance_insights_kms_key_id       = var.rds.performance_insights_kms_key_id
+  performance_insights_retention_period = var.rds.performance_insights_retention_period
 
   #   parameters = [
   #     {
