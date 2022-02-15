@@ -52,3 +52,10 @@ output "elb" {
 output "alb_target_group_arn" {
   value = aws_autoscaling_attachment.asg_attachment_bar.alb_target_group_arn
 }
+
+output "aws_subnet" {
+  value = aws_subnet.one.id
+}
+output "aws_subnet2" {
+  value = aws_subnet.second.id
+}

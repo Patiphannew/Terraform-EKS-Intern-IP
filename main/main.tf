@@ -1,14 +1,14 @@
 variable "eks" {
-  type = map
+  type = map(any)
 }
 variable "eksSubnet" {
-  type = list
+  type = list(any)
 }
 variable "eksManagedNodeGroupDefaults" {
-  type = map
+  type = map(any)
 }
 variable "eksManagedNodeGroup" {
-  type = map
+  type = map(any)
 }
 
 module "eks" {
@@ -37,7 +37,7 @@ module "eks" {
   vpc_id     = var.eks.vpc_id
   subnet_ids = [var.eksSubnet[0], var.eksSubnet[1], var.eksSubnet[2]]
 
-  ##################################################################################################################
+  #####################################################################################
 
 
 
@@ -94,7 +94,7 @@ module "eks" {
   # }
 
 
-  ##################################################################################################################
+  #####################################################################################
 
 
 
@@ -149,7 +149,7 @@ module "eks" {
   }
 
 
-  ##################################################################################################################
+  ####################################################################################
 
 
   #   # Fargate Profile(s)
@@ -204,7 +204,7 @@ resource "aws_autoscaling_attachment" "asg_attachment_bar" {
   alb_target_group_arn   = module.nlb.target_group_arns[0]
 }
 
-# ###################################ArgoCD##############################################
+# ###################################ArgoCD############################################
 
 resource "helm_release" "argocd-helm" {
   name = "argocd-helm"
@@ -215,7 +215,7 @@ resource "helm_release" "argocd-helm" {
   namespace        = "argocd"
 }
 
-# ###################################nginx-ingress######################################
+# ###################################nginx-ingress#####################################
 
 # resource "helm_release" "ingress-con-helm" {
 #   name = "nginx-ingress"
@@ -230,3 +230,28 @@ resource "helm_release" "argocd-helm" {
 #     value = "false"
 #   }
 # }
+
+############################################sub1#######################################
+
+resource "aws_subnet" "one" {
+  vpc_id            = "vpc-b8d13ade"
+  availability_zone = "ap-southeast-1a" # ap-southeast-1a ,ap-southeast-1b, ap-southeast-1c
+  cidr_block        = "172.31.64.0/20"
+
+
+  tags = {
+    Name = "newsub001"
+  }
+}
+
+############################################sub2#######################################
+
+resource "aws_subnet" "second" {
+  vpc_id            = "vpc-b8d13ade"
+  availability_zone = "ap-southeast-1b" # ap-southeast-1a ,ap-southeast-1b, ap-southeast-1c
+  cidr_block        = "172.31.96.0/20"
+
+  tags = {
+    Name = "newsub002"
+  }
+}
