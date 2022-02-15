@@ -203,3 +203,30 @@ resource "aws_autoscaling_attachment" "asg_attachment_bar" {
   autoscaling_group_name = module.eks.eks_managed_node_groups.newMNG.node_group_resources[0].autoscaling_groups[0].name
   alb_target_group_arn   = module.nlb.target_group_arns[0]
 }
+
+# ###################################ArgoCD##############################################
+
+resource "helm_release" "argocd-helm" {
+  name = "argocd-helm"
+
+  repository       = "https://argoproj.github.io/argo-helm"
+  chart            = "argo-cd"
+  create_namespace = true
+  namespace        = "argocd"
+}
+
+# ###################################nginx-ingress######################################
+
+resource "helm_release" "ingress-con-helm" {
+  name = "nginx-ingress"
+
+  repository       = "https://helm.nginx.com/stable"
+  chart            = "nginx-ingress"
+  create_namespace = true
+  namespace        = "nginx-ingress"
+
+  set {
+    name  = "controller.service.create"
+    value = "false"
+  }
+}
