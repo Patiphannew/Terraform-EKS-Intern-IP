@@ -69,6 +69,9 @@ module "db" {
   performance_insights_kms_key_id       = var.rds.performance_insights_kms_key_id
   performance_insights_retention_period = var.rds.performance_insights_retention_period
 
+  # DB snapshot is created before the DB instance is deleted, If true is specified, no DBSnapshot is created
+  skip_final_snapshot = var.rds.skip_final_snapshot
+  
   #   parameters = [
   #     {
   #       name = "character_set_client"
