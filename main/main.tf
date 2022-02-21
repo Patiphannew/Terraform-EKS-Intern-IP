@@ -10,6 +10,12 @@ variable "eksManagedNodeGroupDefaults" {
 variable "eksManagedNodeGroup" {
   type = map(any)
 }
+variable "subnet1" {
+  type = map(any)
+}
+variable "subnet2" {
+  type = map(any)
+}
 
 module "eks" {
   source = "terraform-aws-modules/eks/aws"
@@ -231,27 +237,25 @@ resource "helm_release" "argocd-helm" {
 #   }
 # }
 
-############################################sub1#######################################
+#########################################subnet#######################################
 
 resource "aws_subnet" "one" {
-  vpc_id            = "vpc-b8d13ade"
-  availability_zone = "ap-southeast-1a" # ap-southeast-1a ,ap-southeast-1b, ap-southeast-1c
-  cidr_block        = "172.31.64.0/20"
+  vpc_id            = var.subnet1.vpc_id
+  availability_zone = var.subnet1.availability_zone # ap-southeast-1a ,ap-southeast-1b, ap-southeast-1c
+  cidr_block        = var.subnet1.cidr_block
 
 
   tags = {
-    Name = "newsub001"
+    Name = var.subnet1.Name
   }
 }
 
-############################################sub2#######################################
-
 resource "aws_subnet" "second" {
-  vpc_id            = "vpc-b8d13ade"
-  availability_zone = "ap-southeast-1b" # ap-southeast-1a ,ap-southeast-1b, ap-southeast-1c
-  cidr_block        = "172.31.96.0/20"
+  vpc_id            = var.subnet2.vpc_id
+  availability_zone = var.subnet2.availability_zone # ap-southeast-1a ,ap-southeast-1b, ap-southeast-1c
+  cidr_block        = var.subnet2.cidr_block
 
   tags = {
-    Name = "newsub002"
+    Name = var.subnet2.Name
   }
 }
