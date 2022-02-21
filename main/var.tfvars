@@ -95,9 +95,7 @@ rds = {
   performance_insights_kms_key_id = "arn:aws:kms:ap-southeast-1:115595541515:key/44cffea8-6f93-403c-9d53-bce9d9616f1c"
   performance_insights_retention_period = 7 
   
-  export AWS_ACCESS_KEY_ID="ASIARV2QH7QFXPXUHHEU"
-  export AWS_SECRET_ACCESS_KEY="a8oAtLQuiWu5cJrcZGQU5VRUlQTdJHmT157toHhg"
-  export AWS_SESSION_TOKEN="IQoJb3JpZ2luX2VjEIP//////////wEaDmFwLXNvdXRoZWFzdC0xIkcwRQIgDnViw64jeGBcdcvrNr9AVssdGJqTGLgGh7fOHiIKmC0CIQCPurR2BsiYGsYXYjcHGUP7dfUuNWNW+rLmRh6BD47SjiqhAwjM//////////8BEAEaDDExNTU5NTU0MTUxNSIMs9zk9/Xyojw28+JBKvUC5gR0L1436ddojqrZ08FOPcH5lcnqzkl41Lu83P3BlQSoKekeP699fvQMWJyCwVhcyCXGorGAiqEsjrgoD2/K1YM7mbDNhPORuCXiIDyWIRg/AKucef37iT6IhYFk7ksgjsPqIye+H5a3POCylSsKv+kclY7xZYhAq1XpQYjXO9C/T8dHfl3toMYcoyEVmKLgilJaHYe3lKXsUHjvpDu6Tce4Qpj9bD5RUgnZUW/AvXnYXTxM8GbKQdpjR8V/M76w24PTgRDFzy84xjcp6naFrtYvGZhFbyS4WpJL60OzHhP0nrNLco2itFBW6R9Sn/XX0wFWmW7xpbp4xzteKBri1JzVPtC+eSjKVvtrYfAMWYvP8lmlpeR1ZvMM5wAPzau+GdJGBWjfDt1BToDRzAD66C7GjxKvmIRqA+gb0hFmISxYGkK96N31CgEjyvKBNxrRtn7FJcOD3ZFBZu83vYY9Wc9BHWJng0onq+JCkD3mbmdP88X5CjDk+LaQBjqmAUO3GL/Lsim+SgBQPH2Vke3GreivR5vh3UbK+waCkoDqLcTHsaHw1SruHfd/aZx2LVhysgvWKhnS8hyWrnZwmS9sSP92L7avSmENTu5MaHRmp1WLoAyxLPk6HkJoHIu9J00r1utk6yyKlQQ3mbUoAKK1XjKaSMn4Kc9bY+GZg583poA6Kh8fLMo/MRl/gJ1nhXPhbP0Ij6yJARIjespPOwg9kEPYQtk="skip_final_snapshot = true
+  skip_final_snapshot = true
 }
 
 #######################  subnet  ######################################################################
