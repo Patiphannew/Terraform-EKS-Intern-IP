@@ -49,7 +49,7 @@ module "db" {
   db_subnet_group_name            = var.rds.db_subnet_group_name
   db_subnet_group_use_name_prefix = var.rds.db_subnet_group_use_name_prefix
   db_subnet_group_description     = var.rds.db_subnet_group_description
-  subnet_ids                      = [aws_subnet.one.id, aws_subnet.second.id]
+  subnet_ids                      = [aws_subnet.private.*.id[0], aws_subnet.private.*.id[1]]
 
   # DB parameter group
   #   family = "mysql5.7"

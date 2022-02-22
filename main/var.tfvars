@@ -100,21 +100,19 @@ rds = {
 
 #######################  subnet  ######################################################################
 
-subnet1 = {
-  vpc_id     = "vpc-b8d13ade"
-  availability_zone = "ap-southeast-1a"   # ap-southeast-1a ,ap-southeast-1b, ap-southeast-1c
-  cidr_block = "172.31.64.0/20"
+# subnet1 = {
+#   vpc_id     = "vpc-b8d13ade"
+#   availability_zone = "ap-southeast-1a"   # ap-southeast-1a ,ap-southeast-1b, ap-southeast-1c
+#   cidr_block = "172.31.64.0/20"
+#   Name = "newsub001"
+# }
 
-  Name = "newsub001"
-  
-
-}
-
-subnet2 = {
-  vpc_id     = "vpc-b8d13ade"
-  availability_zone = "ap-southeast-1b"   # ap-southeast-1a ,ap-southeast-1b, ap-southeast-1c
-  cidr_block = "172.31.96.0/20"
-
-  Name = "newsub002"
-
-}
+# subnet2 = {
+#   vpc_id     = "vpc-b8d13ade"
+#   availability_zone = "ap-southeast-1b"   # ap-southeast-1a ,ap-southeast-1b, ap-southeast-1c
+#   cidr_block = "172.31.96.0/20"
+#   Name = "newsub002"
+# }
+name = ["hello", "world"]
+private_subnet = ["172.31.64.0/20", "172.31.96.0/20"]
+availability_zone = ["ap-southeast-1a", "ap-southeast-1b"]

@@ -10,12 +10,12 @@ variable "eksManagedNodeGroupDefaults" {
 variable "eksManagedNodeGroup" {
   type = map(any)
 }
-variable "subnet1" {
-  type = map(any)
-}
-variable "subnet2" {
-  type = map(any)
-}
+# variable "subnet1" {
+#   type = map(any)
+# }
+# variable "subnet2" {
+#   type = map(any)
+# }
 
 module "eks" {
   source = "terraform-aws-modules/eks/aws"
@@ -239,23 +239,34 @@ resource "helm_release" "argocd-helm" {
 
 #########################################subnet#######################################
 
-resource "aws_subnet" "one" {
-  vpc_id            = var.subnet1.vpc_id
-  availability_zone = var.subnet1.availability_zone # ap-southeast-1a ,ap-southeast-1b, ap-southeast-1c
-  cidr_block        = var.subnet1.cidr_block
+# resource "aws_subnet" "one" {
+#   vpc_id            = var.subnet1.vpc_id
+#   availability_zone = var.subnet1.availability_zone # ap-southeast-1a ,ap-southeast-1b, ap-southeast-1c
+#   cidr_block        = var.subnet1.cidr_block
 
 
+#   tags = {
+#     Name = var.subnet1.Name
+#   }
+# }
+
+# resource "aws_subnet" "second" {
+#   vpc_id            = var.subnet2.vpc_id
+#   availability_zone = var.subnet2.availability_zone # ap-southeast-1a ,ap-southeast-1b, ap-southeast-1c
+#   cidr_block        = var.subnet2.cidr_block
+
+#   tags = {
+#     Name = var.subnet2.Name
+#   }
+# }
+
+resource "aws_subnet" "private" {
+  count                   = length(var.private_subnet)
+  vpc_id                  = "vpc-b8d13ade"
+  cidr_block              = var.private_subnet[count.index]
+  availability_zone       = var.availability_zone[count.index]
+  map_public_ip_on_launch = false
   tags = {
-    Name = var.subnet1.Name
-  }
-}
-
-resource "aws_subnet" "second" {
-  vpc_id            = var.subnet2.vpc_id
-  availability_zone = var.subnet2.availability_zone # ap-southeast-1a ,ap-southeast-1b, ap-southeast-1c
-  cidr_block        = var.subnet2.cidr_block
-
-  tags = {
-    Name = var.subnet2.Name
+    Name = var.name[count.index]
   }
 }
