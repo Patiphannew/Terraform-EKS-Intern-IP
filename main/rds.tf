@@ -49,8 +49,7 @@ module "db" {
   db_subnet_group_name            = var.rds.db_subnet_group_name
   db_subnet_group_use_name_prefix = var.rds.db_subnet_group_use_name_prefix
   db_subnet_group_description     = var.rds.db_subnet_group_description
-  subnet_ids                      = [aws_subnet.private.*.id[0], aws_subnet.private.*.id[1]]
-
+  subnet_ids                      = [for subnet in aws_subnet.private : subnet.id]
   # DB parameter group
   #   family = "mysql5.7"
   #   family = "default.postgres14"
@@ -71,7 +70,7 @@ module "db" {
 
   # DB snapshot is created before the DB instance is deleted, If true is specified, no DBSnapshot is created
   skip_final_snapshot = var.rds.skip_final_snapshot
-  
+
   #   parameters = [
   #     {
   #       name = "character_set_client"
